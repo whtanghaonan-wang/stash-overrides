@@ -1,0 +1,38 @@
+name: Cilidili Adblock
+desc: Supplemental ad blocking rules for Cilidili. Adds rules without changing the main profile.
+
+rules:
+  # Pangle / ChuanShanJia
+  - DOMAIN-SUFFIX,pangolin-sdk-toutiao.com,REJECT
+  - DOMAIN-SUFFIX,pglstatp-toutiao.com,REJECT
+
+  # Tencent GDT / Youlianghui
+  - DOMAIN-SUFFIX,gdt.qq.com,REJECT
+  - DOMAIN-SUFFIX,gdtimg.com,REJECT
+  - DOMAIN-SUFFIX,e.qq.com,REJECT
+
+  # Kuaishou Ads
+  - DOMAIN-SUFFIX,e.kuaishou.com,REJECT
+  - DOMAIN-SUFFIX,adukwai.com,REJECT
+
+  # Mintegral / Mobvista
+  - DOMAIN-SUFFIX,mbridge.ms,REJECT
+  - DOMAIN-SUFFIX,mintegral.com,REJECT
+  - DOMAIN-SUFFIX,rayjump.com,REJECT
+  - DOMAIN-SUFFIX,mobvista.com,REJECT
+
+  # Xiaomi Ads
+  - DOMAIN-SUFFIX,ad.xiaomi.com,REJECT
+
+  # Google AdMob / Google Ads
+  - DOMAIN-SUFFIX,admob.com,REJECT
+  - DOMAIN-SUFFIX,doubleclick.net,REJECT
+  - DOMAIN-SUFFIX,googleadservices.com,REJECT
+  - DOMAIN-SUFFIX,googlesyndication.com,REJECT
+
+  # Ad aggregation SDKs named in Cilidili privacy policy
+  - DOMAIN-SUFFIX,youxiaoad.com,REJECT
+  - DOMAIN-SUFFIX,admobile.top,REJECT
+
+  # TopOn / AnyThink ad mediation, observed in Stash DNS logs
+  - DOMAIN-SUFFIX,anythinktech.com,REJECT

@@ -1,0 +1,79 @@
+name: Kugou Adblock
+desc: Supplemental ad blocking rules for Kugou Music startup promotions and in-app marketing.
+
+rules:
+  # Tencent Music / Kugou ad delivery
+  - DOMAIN,ad.tencentmusic.com,REJECT
+  - DOMAIN,adstats.tencentmusic.com,REJECT
+  - DOMAIN,adsmind.gdtimg.com,REJECT
+  - DOMAIN,adserviceretry.kugou.com,REJECT
+  - DOMAIN,adserviceretry.kglink.cn,REJECT
+  - DOMAIN,adservice.kugou.com,REJECT
+  - DOMAIN,ads.service.kugou.com,REJECT
+  - DOMAIN,splashimgretrybssdl.cloud.kugou.com,REJECT
+  - DOMAIN,tmead.y.qq.com,REJECT
+  - DOMAIN,tmeadcomm.y.qq.com,REJECT
+  - DOMAIN-SUFFIX,gdt.qq.com,REJECT
+  - DOMAIN-SUFFIX,pgdt.gtimg.cn,REJECT
+  - DOMAIN-SUFFIX,ugdtimg.com,REJECT
+  - DOMAIN,sdk.e.qq.com,REJECT
+
+  # Apple ad attribution / iAd endpoints observed during Kugou startup
+  - DOMAIN,api-adservices.apple.com,REJECT
+  - DOMAIN,ca.iadsdk.apple.com,REJECT
+
+  # Kugou startup promotion / operations / activity surfaces
+  - DOMAIN,welfare.kugou.com,REJECT
+  - DOMAIN,vipos.kugou.com,REJECT
+  - DOMAIN,acshow.kugou.com,REJECT
+  - DOMAIN,bjacshow.kugou.com,REJECT
+  - DOMAIN,acsing.service.kugou.com,REJECT
+  - DOMAIN,service1.fanxing.kugou.com,REJECT
+  - DOMAIN,fx.service.kugou.com,REJECT
+
+  # Tencent ad tracking / delivery / telemetry observed with Kugou
+  - DOMAIN,us.l.qq.com,REJECT
+  - DOMAIN,h.trace.qq.com,REJECT
+  - DOMAIN,rdelivery.qq.com,REJECT
+  - DOMAIN,receiver.tdm.qq.com,REJECT
+  - DOMAIN,hc.tdm.qq.com,REJECT
+  - DOMAIN,tmfmazuhttp-wangka.m.qq.com,REJECT
+
+  # Kugou analytics / collection endpoints
+  - DOMAIN,nbcollect.kugou.com,REJECT
+  - DOMAIN,mobilelog.kugou.com,REJECT
+  - DOMAIN,log.web.kugou.com,REJECT
+  - DOMAIN,report.tencentmusic.com,REJECT
+
+http:
+  mitm:
+    - gateway.kugou.com
+    - gatewayretry.kugou.com
+    - fx.service.kugou.com
+    - hwstore.kugou.com
+    - ep.kugou.com
+    - gzacshow.kugou.com
+    - m1fxgroup.kugou.com
+
+  url-rewrite:
+    # Startup and in-app ad configuration
+    - ^http:\/\/log\.stat\.kugou\.com\/mobile\/ad\.html - reject
+    - ^https:\/\/fx\.service\.kugou\.com\/mfx-kugoulive\/ad\/ - reject-dict
+    - ^https:\/\/gateway(retry)?\.kugou\.com\/adp\/ad\/ - reject-dict
+    - ^https:\/\/gateway(retry)?\.kugou\.com\/ads\.gateway\/ - reject-dict
+
+    # Feed, task, search, player and comment promotions
+    - ^https:\/\/gateway(retry)?\.kugou\.com\/v\d\/feeds\/follow_feed_fallback - reject-dict
+    - ^https:\/\/gateway(retry)?\.kugou\.com\/mstc\/musicsymbol\/v\d\/system\/profile - reject-dict
+    - ^https:\/\/gateway(retry)?\.kugou\.com\/searchnofocus\/v\d\/search_no_focus_word - reject-dict
+    - ^https:\/\/gateway(retry)?\.kugou\.com\/adp\/bubble\/v\d\/song_play - reject-dict
+    - ^https:\/\/gateway(retry)?\.kugou\.com\/singerdiscuss\/v\d\/entrance\/comment - reject-dict
+    - ^https:\/\/gateway(retry)?\.kugou\.com\/r\/v\d\/general\/putin\/midad - reject-dict
+    - ^https:\/\/gateway(retry)?\.kugou\.com\/ocean\/v\d\/sound\/banner - reject-dict
+
+    # Live, store and album shop promotions
+    - ^https:\/\/gzacshow\.kugou\.com\/mfanxing-home\/cdn\/room\/index\/list_v2 - reject-dict
+    - ^https:\/\/gzacshow\.kugou\.com\/mfx-rt-show\/cdn\/mo\/show\/headline - reject-dict
+    - ^https:\/\/m1fxgroup\.kugou\.com\/fxsing\/yqc\/alongInfo\/getUserAlongInfo - reject-dict
+    - ^https:\/\/hwstore\.kugou\.com\/v\d\/get_store_data - reject-dict
+    - ^https:\/\/ep\.kugou\.com\/v\d\/album_shop\/get_entrance_info - reject-dict

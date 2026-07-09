@@ -1,0 +1,64 @@
+name: iScreen Adblock
+desc: Supplemental ad blocking rules for iScreen. Adds rules without changing the main profile.
+
+rules:
+  # Pangle / ChuanShanJia / GroMore
+  - DOMAIN,api-access.pangolin-sdk-toutiao.com,REJECT
+  - DOMAIN,gromore.pangolin-sdk-toutiao.com,REJECT
+  - DOMAIN-SUFFIX,pangle.io,REJECT
+  - DOMAIN-SUFFIX,pangolin-sdk-toutiao.com,REJECT
+  - DOMAIN-SUFFIX,pangolin-sdk-toutiao1.com,REJECT
+  - DOMAIN-SUFFIX,pangolin-sdk-toutiao-b.com,REJECT
+  - DOMAIN-SUFFIX,pglstatp-toutiao.com,REJECT
+  - DOMAIN,tnc3-alisc1.zijieapi.com,REJECT
+  - DOMAIN-SUFFIX,ctobsnssdk.com,REJECT
+
+  # Tencent GDT / Youlianghui / GDT conversion
+  - DOMAIN,mi.gdt.qq.com,REJECT
+  - DOMAIN,sdk.e.qq.com,REJECT
+  - DOMAIN-SUFFIX,gdt.qq.com,REJECT
+  - DOMAIN-SUFFIX,gdtimg.com,REJECT
+  - DOMAIN-SUFFIX,e.qq.com,REJECT
+
+  # Kuaishou Ads
+  - DOMAIN,open.e.kuaishou.com,REJECT
+  - DOMAIN-SUFFIX,e.kuaishou.com,REJECT
+  - DOMAIN-SUFFIX,adukwai.com,REJECT
+
+  # OceanEngine conversion / ByteDance attribution is intentionally not blocked in
+  # this speed-focused profile; blocking it can make startup SDK initialization wait.
+
+  # AdScope / BeiZi
+  - DOMAIN-SUFFIX,beizi.biz,REJECT
+  - DOMAIN-SUFFIX,ad-scope.com.cn,REJECT
+  - DOMAIN-SUFFIX,adn-plus.com.cn,REJECT
+
+  # Sigmob
+  - DOMAIN-SUFFIX,sigmob.cn,REJECT
+
+  # AppLovin
+  - DOMAIN-SUFFIX,applovin.com,REJECT
+
+  # Vungle / Liftoff
+  - DOMAIN-SUFFIX,vungle.com,REJECT
+
+  # Mintegral / Mobvista
+  - DOMAIN-SUFFIX,mtgglobals.com,REJECT
+  - DOMAIN-SUFFIX,mbridge.ms,REJECT
+  - DOMAIN-SUFFIX,mintegral.com,REJECT
+  - DOMAIN-SUFFIX,rayjump.com,REJECT
+  - DOMAIN-SUFFIX,mobvista.com,REJECT
+
+  # StatisticsLinks / ad mediation observed in iScreen DNS logs
+  - DOMAIN-SUFFIX,statisticslinks.com,REJECT
+  - DOMAIN-SUFFIX,hubcloud.com.cn,REJECT
+
+  # Observed DSP endpoints
+  - DOMAIN-SUFFIX,app-ads-services.com,REJECT
+  - DOMAIN,impdsp.meituan.com,REJECT
+
+  # Common mobile ad networks if iScreen loads overseas inventory
+  - DOMAIN-SUFFIX,admob.com,REJECT
+  - DOMAIN-SUFFIX,doubleclick.net,REJECT
+  - DOMAIN-SUFFIX,googleadservices.com,REJECT
+  - DOMAIN-SUFFIX,googlesyndication.com,REJECT
