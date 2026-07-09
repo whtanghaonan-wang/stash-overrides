@@ -10,12 +10,15 @@ rules:
   - DOMAIN,adserviceretry.kglink.cn,REJECT
   - DOMAIN,adservice.kugou.com,REJECT
   - DOMAIN,ads.service.kugou.com,REJECT
+  - DOMAIN,d.kugou.com,REJECT
+  - DOMAIN,log.stat.kugou.com,REJECT
   - DOMAIN,splashimgretrybssdl.cloud.kugou.com,REJECT
   - DOMAIN,tmead.y.qq.com,REJECT
   - DOMAIN,tmeadcomm.y.qq.com,REJECT
   - DOMAIN-SUFFIX,gdt.qq.com,REJECT
   - DOMAIN-SUFFIX,pgdt.gtimg.cn,REJECT
   - DOMAIN-SUFFIX,ugdtimg.com,REJECT
+  - DOMAIN,ios.bugly.qq.com,REJECT
   - DOMAIN,sdk.e.qq.com,REJECT
 
   # Apple ad attribution / iAd endpoints observed during Kugou startup
@@ -54,6 +57,17 @@ http:
     - ep.kugou.com
     - gzacshow.kugou.com
     - m1fxgroup.kugou.com
+    - d.kugou.com
+    - papi.kugou.com
+    - mpservice.kugou.com
+    - mcloudservice.kugou.com
+    - gtools.kugou.com
+    - tools.mobile.kugou.com
+    - vipos.kugou.com
+    - welfare.kugou.com
+    - kugouitg.kugou.com
+    - online.kugou.com
+    - api.tencentmusic.com
 
   url-rewrite:
     # Startup and in-app ad configuration
@@ -70,6 +84,9 @@ http:
     - ^https:\/\/gateway(retry)?\.kugou\.com\/singerdiscuss\/v\d\/entrance\/comment - reject-dict
     - ^https:\/\/gateway(retry)?\.kugou\.com\/r\/v\d\/general\/putin\/midad - reject-dict
     - ^https:\/\/gateway(retry)?\.kugou\.com\/ocean\/v\d\/sound\/banner - reject-dict
+    - ^https:\/\/(?:gateway(?:retry)?|papi|mpservice|mcloudservice|gtools|tools\.mobile|d|online|kugouitg|vipos|welfare)\.kugou\.com\/.*(?:\/|_|-|\.)(?:ad|ads|adp|advert|splash|startup|launch|popup|pop|promotion|promote|operation|operate|marketing|commercial|activity|vipos|welfare)(?:\/|\?|&|_|-|\.|$) - reject-dict
+    - ^https:\/\/(?:api|ad|adstats)\.tencentmusic\.com\/.*(?:\/|_|-|\.)(?:ad|ads|advert|splash|startup|launch|popup|pop|promotion|promote|operation|operate|marketing|commercial|activity)(?:\/|\?|&|_|-|\.|$) - reject-dict
+    - ^https:\/\/(?:tmead|tmeadcomm)\.y\.qq\.com\/ - reject-dict
 
     # Live, store and album shop promotions
     - ^https:\/\/gzacshow\.kugou\.com\/mfanxing-home\/cdn\/room\/index\/list_v2 - reject-dict
@@ -77,3 +94,14 @@ http:
     - ^https:\/\/m1fxgroup\.kugou\.com\/fxsing\/yqc\/alongInfo\/getUserAlongInfo - reject-dict
     - ^https:\/\/hwstore\.kugou\.com\/v\d\/get_store_data - reject-dict
     - ^https:\/\/ep\.kugou\.com\/v\d\/album_shop\/get_entrance_info - reject-dict
+
+  script:
+    - match: ^https:\/\/gateway(retry)?\.kugou\.com\/ocean\/v\d\/tab\/list_v\d
+      name: kugou-clean-tabs
+      type: response
+      require-body: true
+
+script-providers:
+  kugou-clean-tabs:
+    url: https://raw.githubusercontent.com/whtanghaonan-wang/stash-overrides/main/kugou-clean-tabs.js
+    interval: 86400
