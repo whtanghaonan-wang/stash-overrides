@@ -2,6 +2,9 @@ name: Kugou Adblock
 desc: Supplemental ad blocking rules for Kugou Music startup promotions and in-app marketing.
 
 rules:
+  # Force Kugou/Tencent Music QUIC traffic back to TCP so HTTP/MitM rewrites can see it.
+  - AND,((PROTOCOL,QUIC),(OR,((DOMAIN-SUFFIX,kugou.com),(DOMAIN-SUFFIX,kglink.cn),(DOMAIN-SUFFIX,tencentmusic.com),(DOMAIN-SUFFIX,y.qq.com),(DOMAIN-SUFFIX,gtimg.cn),(DOMAIN-SUFFIX,gdt.qq.com),(DOMAIN-SUFFIX,ugdtimg.com)))),REJECT-DROP,no-track
+
   # Tencent Music / Kugou ad delivery
   - DOMAIN,ad.tencentmusic.com,REJECT
   - DOMAIN,adstats.tencentmusic.com,REJECT
@@ -49,6 +52,15 @@ rules:
   - DOMAIN,report.tencentmusic.com,REJECT
 
 http:
+  force-http-engine:
+    - '*.kugou.com:80'
+    - '*.kglink.cn:80'
+    - '*.tencentmusic.com:80'
+    - '*.y.qq.com:80'
+    - '*.gtimg.cn:80'
+    - '*.gdt.qq.com:80'
+    - '*.ugdtimg.com:80'
+
   mitm:
     - gateway.kugou.com
     - gatewayretry.kugou.com
