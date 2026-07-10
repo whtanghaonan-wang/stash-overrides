@@ -15,6 +15,7 @@ rules:
   - DOMAIN,ads.service.kugou.com,REJECT
   - DOMAIN,d.kugou.com,REJECT
   - DOMAIN,log.stat.kugou.com,REJECT
+  - DOMAIN,mdpfilebssdlbig.kugou.com,REJECT
   - DOMAIN,splashimgretrybssdl.cloud.kugou.com,REJECT
   - DOMAIN,tmead.y.qq.com,REJECT
   - DOMAIN,tmeadcomm.y.qq.com,REJECT
@@ -47,6 +48,8 @@ rules:
 
   # Kugou analytics / collection endpoints
   - DOMAIN,nbcollect.kugou.com,REJECT
+  - DOMAIN,nbcollectretry.kugou.com,REJECT
+  - DOMAIN,rt-m.kugou.com,REJECT
   - DOMAIN,mobilelog.kugou.com,REJECT
   - DOMAIN,log.web.kugou.com,REJECT
   - DOMAIN,report.tencentmusic.com,REJECT
@@ -84,6 +87,7 @@ http:
   url-rewrite:
     # Startup and in-app ad configuration
     - ^http:\/\/log\.stat\.kugou\.com\/mobile\/ad\.html - reject
+    - ^https?:\/\/acshow2\.kugou\.com\/mfx-shortvideo\/conf\/kv\/app(?:\?|$) - reject-dict
     - ^https:\/\/fx\.service\.kugou\.com\/mfx-kugoulive\/ad\/ - reject-dict
     - ^https:\/\/gateway(retry)?\.kugou\.com\/adp\/ad\/ - reject-dict
     - ^https:\/\/gateway(retry)?\.kugou\.com\/ads\.gateway\/ - reject-dict
