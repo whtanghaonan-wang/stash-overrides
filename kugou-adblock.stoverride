@@ -67,6 +67,9 @@ http:
   mitm:
     - gateway.kugou.com
     - gatewayretry.kugou.com
+    - acshow2.kugou.com
+    - bjacshow2.kugou.com
+    - service3.fanxing.kugou.com
     - fx.service.kugou.com
     - hwstore.kugou.com
     - ep.kugou.com
@@ -88,6 +91,10 @@ http:
     # Startup and in-app ad configuration
     - ^http:\/\/log\.stat\.kugou\.com\/mobile\/ad\.html - reject
     - ^https?:\/\/acshow2\.kugou\.com\/mfx-shortvideo\/conf\/kv\/app(?:\?|$) - reject-dict
+    - ^https?:\/\/bjacshow2\.kugou\.com\/mfx-appconf\/cdn\/start\/config\.json(?:\?|$) - reject-dict
+    - ^https?:\/\/acshow2\.kugou\.com\/mfx-kugoulive\/room\/list(?:\?|$) - reject-dict
+    - ^https?:\/\/acshow2\.kugou\.com\/show7\/json\/v2\/cdn\/getscfg(?:\?|$) - reject-dict
+    - ^https?:\/\/service3\.fanxing\.kugou\.com\/video\/mo\/gateway\/api\/config(?:\?|$) - reject-dict
     - ^https:\/\/fx\.service\.kugou\.com\/mfx-kugoulive\/ad\/ - reject-dict
     - ^https:\/\/gateway(retry)?\.kugou\.com\/adp\/ad\/ - reject-dict
     - ^https:\/\/gateway(retry)?\.kugou\.com\/ads\.gateway\/ - reject-dict

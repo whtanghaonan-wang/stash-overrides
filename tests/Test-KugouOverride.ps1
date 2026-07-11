@@ -34,9 +34,14 @@ $cases = @(
     @{ Url = 'http://rt-m.kugou.com/v2/post'; Expected = $true; Label = 'real-time ad report' }
     @{ Url = 'http://mdpfilebssdlbig.kugou.com/472d0beed70f72b81c05f05dba21df3d.png'; Expected = $true; Label = 'startup image asset' }
     @{ Url = 'http://acshow2.kugou.com/mfx-shortvideo/conf/kv/app'; Expected = $true; Label = 'promotion config' }
+    @{ Url = 'http://bjacshow2.kugou.com/mfx-appconf/cdn/start/config.json'; Expected = $true; Label = 'Fanxing startup config' }
+    @{ Url = 'http://acshow2.kugou.com/mfx-kugoulive/room/list'; Expected = $true; Label = 'promoted live room list' }
+    @{ Url = 'http://acshow2.kugou.com/show7/json/v2/cdn/getscfg'; Expected = $true; Label = 'Fanxing scene config' }
+    @{ Url = 'http://service3.fanxing.kugou.com/video/mo/gateway/api/config'; Expected = $true; Label = 'direct-IP live gateway config' }
     @{ Url = 'https://gateway.kugou.com/v4/mobile_splash'; Expected = $true; Label = 'mobile splash config' }
     @{ Url = 'http://mcloudservice.kugou.com/v1/get_version'; Expected = $false; Label = 'app version check' }
     @{ Url = 'http://tools.mobile.kugou.com/v1/privacy/info'; Expected = $false; Label = 'privacy configuration' }
+    @{ Url = 'http://service3.fanxing.kugou.com/video/mo/live/pull/mutiline/cfg'; Expected = $false; Label = 'live playback quality config' }
     @{ Url = 'https://gateway.kugou.com/v1/user/profile'; Expected = $false; Label = 'normal gateway request' }
 )
 
