@@ -9,9 +9,6 @@ rules:
   - DOMAIN,ad.tencentmusic.com,REJECT
   - DOMAIN,adstats.tencentmusic.com,REJECT
   - DOMAIN,adsmind.gdtimg.com,REJECT
-  - DOMAIN,adserviceretry.kugou.com,REJECT
-  - DOMAIN,adserviceretry.kglink.cn,REJECT
-  - DOMAIN,adservice.kugou.com,REJECT
   - DOMAIN,ads.service.kugou.com,REJECT
   - DOMAIN,d.kugou.com,REJECT
   - DOMAIN,log.stat.kugou.com,REJECT
@@ -32,10 +29,7 @@ rules:
   # Kugou startup promotion / operations / activity surfaces
   - DOMAIN,welfare.kugou.com,REJECT
   - DOMAIN,vipos.kugou.com,REJECT
-  - DOMAIN,acshow.kugou.com,REJECT
-  - DOMAIN,bjacshow.kugou.com,REJECT
   - DOMAIN,acsing.service.kugou.com,REJECT
-  - DOMAIN,service1.fanxing.kugou.com,REJECT
   - DOMAIN,fx.service.kugou.com,REJECT
 
   # Tencent ad tracking / delivery / telemetry observed with Kugou
@@ -65,10 +59,16 @@ http:
     - '*.ugdtimg.com:80'
 
   mitm:
+    - adservice.kugou.com
+    - adserviceretry.kugou.com
+    - adserviceretry.kglink.cn
     - gateway.kugou.com
     - gatewayretry.kugou.com
+    - acshow.kugou.com
     - acshow2.kugou.com
+    - bjacshow.kugou.com
     - bjacshow2.kugou.com
+    - service1.fanxing.kugou.com
     - service3.fanxing.kugou.com
     - fx.service.kugou.com
     - hwstore.kugou.com
@@ -90,11 +90,6 @@ http:
   url-rewrite:
     # Startup and in-app ad configuration
     - ^http:\/\/log\.stat\.kugou\.com\/mobile\/ad\.html - reject
-    - ^https?:\/\/acshow2\.kugou\.com\/mfx-shortvideo\/conf\/kv\/app(?:\?|$) - reject-dict
-    - ^https?:\/\/bjacshow2\.kugou\.com\/mfx-appconf\/cdn\/start\/config\.json(?:\?|$) - reject-dict
-    - ^https?:\/\/acshow2\.kugou\.com\/mfx-kugoulive\/room\/list(?:\?|$) - reject-dict
-    - ^https?:\/\/acshow2\.kugou\.com\/show7\/json\/v2\/cdn\/getscfg(?:\?|$) - reject-dict
-    - ^https?:\/\/service3\.fanxing\.kugou\.com\/video\/mo\/gateway\/api\/config(?:\?|$) - reject-dict
     - ^https:\/\/fx\.service\.kugou\.com\/mfx-kugoulive\/ad\/ - reject-dict
     - ^https:\/\/gateway(retry)?\.kugou\.com\/adp\/ad\/ - reject-dict
     - ^https:\/\/gateway(retry)?\.kugou\.com\/ads\.gateway\/ - reject-dict
@@ -107,7 +102,7 @@ http:
     - ^https:\/\/gateway(retry)?\.kugou\.com\/singerdiscuss\/v\d\/entrance\/comment - reject-dict
     - ^https:\/\/gateway(retry)?\.kugou\.com\/r\/v\d\/general\/putin\/midad - reject-dict
     - ^https:\/\/gateway(retry)?\.kugou\.com\/ocean\/v\d\/sound\/banner - reject-dict
-    - ^https:\/\/(?:gateway(?:retry)?|papi|mpservice|mcloudservice|gtools|tools\.mobile|d|online|kugouitg|vipos|welfare)\.kugou\.com\/.*(?:\/|_|-|\.)(?:ad|ads|adp|advert|splash|startup|launch|popup|pop|promotion|promote|operation|operate|marketing|commercial|activity|vipos|welfare)(?:\/|\?|&|_|-|\.|$) - reject-dict
+    - ^https:\/\/(?:gateway(?:retry)?|papi|mpservice|mcloudservice|gtools|tools\.mobile|d|online|kugouitg|vipos|welfare)\.kugou\.com\/.*(?:\/|_|-|\.)(?:ad|ads|adp|advert|startup|launch|popup|pop|promotion|promote|operation|operate|marketing|commercial|activity|vipos|welfare)(?:\/|\?|&|_|-|\.|$) - reject-dict
     - ^https:\/\/(?:api|ad|adstats)\.tencentmusic\.com\/.*(?:\/|_|-|\.)(?:ad|ads|advert|splash|startup|launch|popup|pop|promotion|promote|operation|operate|marketing|commercial|activity)(?:\/|\?|&|_|-|\.|$) - reject-dict
     - ^https:\/\/(?:tmead|tmeadcomm)\.y\.qq\.com\/ - reject-dict
 
@@ -119,12 +114,21 @@ http:
     - ^https:\/\/ep\.kugou\.com\/v\d\/album_shop\/get_entrance_info - reject-dict
 
   script:
+    - match: ^https?:\/\/(?:adservice(?:retry)?\.(?:kugou\.com|kglink\.cn)\/v4\/mobile_splash(?:_sort)?|gateway(?:retry)?\.kugou\.com\/v4\/mobile_splash(?:_sort)?|acshow2?\.kugou\.com\/(?:mfx-shortvideo\/conf\/kv\/app|mfx-kugoulive\/room\/list|show7\/json\/v2\/cdn\/getscfg)|bjacshow2?\.kugou\.com\/mfx-appconf\/cdn\/start\/config\.json|service(?:1|3)\.fanxing\.kugou\.com\/video\/mo\/gateway\/api\/config)(?:\?|$)
+      name: kugou-sanitize-ads
+      type: response
+      require-body: true
+
     - match: ^https:\/\/gateway(retry)?\.kugou\.com\/ocean\/v\d\/tab\/list_v\d
       name: kugou-clean-tabs
       type: response
       require-body: true
 
 script-providers:
+  kugou-sanitize-ads:
+    url: https://raw.githubusercontent.com/whtanghaonan-wang/stash-overrides/main/kugou-sanitize-ads.js?v=20260713-v7
+    interval: 86400
+
   kugou-clean-tabs:
     url: https://raw.githubusercontent.com/whtanghaonan-wang/stash-overrides/main/kugou-clean-tabs.js
     interval: 86400

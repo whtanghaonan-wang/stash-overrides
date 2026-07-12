@@ -18,6 +18,12 @@ $rewriteRules = foreach ($line in $content -split "`r?`n") {
     }
 }
 
+$scriptRules = foreach ($line in $content -split "`r?`n") {
+    if ($line -match '^\s*-\s+match:\s+(\^.+?)\s*$') {
+        [regex]::new($Matches[1])
+    }
+}
+
 function Test-UrlBlocked {
     param([string]$Url)
 
@@ -26,7 +32,11 @@ function Test-UrlBlocked {
         return $true
     }
 
-    return [bool]($rewriteRules | Where-Object { $_.IsMatch($Url) } | Select-Object -First 1)
+    if ($rewriteRules | Where-Object { $_.IsMatch($Url) } | Select-Object -First 1) {
+        return $true
+    }
+
+    return [bool]($scriptRules | Where-Object { $_.IsMatch($Url) } | Select-Object -First 1)
 }
 
 $cases = @(
@@ -39,6 +49,7 @@ $cases = @(
     @{ Url = 'http://acshow2.kugou.com/show7/json/v2/cdn/getscfg'; Expected = $true; Label = 'Fanxing scene config' }
     @{ Url = 'http://service3.fanxing.kugou.com/video/mo/gateway/api/config'; Expected = $true; Label = 'direct-IP live gateway config' }
     @{ Url = 'https://gateway.kugou.com/v4/mobile_splash'; Expected = $true; Label = 'mobile splash config' }
+    @{ Url = 'http://adserviceretry.kglink.cn/v4/mobile_splash_sort'; Expected = $true; Label = 'retry splash config' }
     @{ Url = 'http://mcloudservice.kugou.com/v1/get_version'; Expected = $false; Label = 'app version check' }
     @{ Url = 'http://tools.mobile.kugou.com/v1/privacy/info'; Expected = $false; Label = 'privacy configuration' }
     @{ Url = 'http://service3.fanxing.kugou.com/video/mo/live/pull/mutiline/cfg'; Expected = $false; Label = 'live playback quality config' }
@@ -46,6 +57,19 @@ $cases = @(
 )
 
 $failures = @()
+foreach ($domain in @(
+    'adservice.kugou.com',
+    'adserviceretry.kugou.com',
+    'adserviceretry.kglink.cn',
+    'acshow.kugou.com',
+    'bjacshow.kugou.com',
+    'service1.fanxing.kugou.com'
+)) {
+    if ($rejectDomains.Contains($domain)) {
+        $failures += "[$domain] splash config must be sanitized instead of hard-rejected"
+    }
+}
+
 foreach ($case in $cases) {
     $actual = Test-UrlBlocked -Url $case.Url
     if ($actual -ne $case.Expected) {
