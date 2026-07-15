@@ -30,6 +30,9 @@ const input = {
     least_ads: [{ id: 3 }],
     splash_ads: [{ id: 4 }],
     ads: [{ id: 5 }],
+    retry_ads: [{ id: 8 }],
+    retry_local_ads: [{ id: 9 }],
+    fail_process: 1,
     popup: { title: "promotion" },
     normal_config: { enabled: true },
     nested: {
@@ -48,6 +51,9 @@ assert.deepEqual(output.data.front_ads, []);
 assert.deepEqual(output.data.least_ads, []);
 assert.deepEqual(output.data.splash_ads, []);
 assert.deepEqual(output.data.ads, []);
+assert.deepEqual(output.data.retry_ads, []);
+assert.deepEqual(output.data.retry_local_ads, []);
+assert.equal(output.data.fail_process, 0);
 assert.equal(output.data.popup, null);
 assert.deepEqual(output.data.nested.ad_info, []);
 assert.equal(output.data.normal_config.enabled, true);

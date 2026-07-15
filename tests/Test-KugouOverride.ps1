@@ -50,6 +50,7 @@ $cases = @(
     @{ Url = 'http://service3.fanxing.kugou.com/video/mo/gateway/api/config'; Expected = $true; Label = 'direct-IP live gateway config' }
     @{ Url = 'https://gateway.kugou.com/v4/mobile_splash'; Expected = $true; Label = 'mobile splash config' }
     @{ Url = 'http://adserviceretry.kglink.cn/v4/mobile_splash_sort'; Expected = $true; Label = 'retry splash config' }
+    @{ Url = 'https://dynamic-splash.kugou.com/v4/mobile_splash_sort'; Expected = $true; Label = 'dynamic splash host' }
     @{ Url = 'http://mcloudservice.kugou.com/v1/get_version'; Expected = $false; Label = 'app version check' }
     @{ Url = 'http://tools.mobile.kugou.com/v1/privacy/info'; Expected = $false; Label = 'privacy configuration' }
     @{ Url = 'http://service3.fanxing.kugou.com/video/mo/live/pull/mutiline/cfg'; Expected = $false; Label = 'live playback quality config' }
@@ -58,6 +59,7 @@ $cases = @(
 
 $failures = @()
 foreach ($domain in @(
+    'ads.service.kugou.com',
     'adservice.kugou.com',
     'adserviceretry.kugou.com',
     'adserviceretry.kglink.cn',
@@ -67,6 +69,13 @@ foreach ($domain in @(
 )) {
     if ($rejectDomains.Contains($domain)) {
         $failures += "[$domain] splash config must be sanitized instead of hard-rejected"
+    }
+}
+
+foreach ($wildcardHost in @('*.kugou.com', '*.kglink.cn')) {
+    $wildcardPattern = '(?m)^\s*-\s+[''"]?{0}[''"]?\s*$' -f [regex]::Escape($wildcardHost)
+    if ($content -notmatch $wildcardPattern) {
+        $failures += "[$wildcardHost] wildcard MitM host is required for dynamic splash endpoints"
     }
 }
 
