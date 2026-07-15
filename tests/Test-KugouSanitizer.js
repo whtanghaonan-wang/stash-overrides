@@ -6,11 +6,11 @@ const vm = require("node:vm");
 const scriptPath = path.join(__dirname, "..", "kugou-sanitize-ads.js");
 const source = fs.readFileSync(scriptPath, "utf8");
 
-function sanitize(body, url = "http://adserviceretry.kglink.cn/v4/mobile_splash_sort") {
+function run(rawBody, url) {
   let result;
   const context = {
     $request: { url },
-    $response: { body: JSON.stringify(body) },
+    $response: { body: rawBody },
     $done: (value) => {
       result = value;
     },
@@ -18,7 +18,11 @@ function sanitize(body, url = "http://adserviceretry.kglink.cn/v4/mobile_splash_
   };
 
   vm.runInNewContext(source, context);
-  return JSON.parse(result.body);
+  return result;
+}
+
+function sanitize(body, url = "http://adserviceretry.kglink.cn/v4/mobile_splash_sort") {
+  return JSON.parse(run(JSON.stringify(body), url).body);
 }
 
 const input = {
@@ -72,5 +76,24 @@ const gateway = sanitize(
 );
 assert.deepEqual(gateway.data.addrs, []);
 assert.equal(gateway.data.open, 0);
+
+const gatewayAd = sanitize(
+  { status: 1, data: { ads: [{ id: 1 }], ad_list: [{ id: 2 }], keep: "x" } },
+  "https://gateway.kugou.com/adp/ad/v2/getAd?plat=0",
+);
+assert.deepEqual(gatewayAd.data.ads, []);
+assert.deepEqual(gatewayAd.data.ad_list, []);
+assert.equal(gatewayAd.data.keep, "x");
+
+const adFallback = run("not-json", "https://gatewayretry.kugou.com/ads.gateway/v1/splash");
+const adFallbackBody = JSON.parse(adFallback.body);
+assert.equal(adFallbackBody.status, 1);
+assert.deepEqual(adFallbackBody.data, {});
+
+const splashFallback = run("not-json", "http://adservice.kugou.com/v5/mobile_splash?plat=0");
+assert.deepEqual(JSON.parse(splashFallback.body).data, {});
+
+const passthrough = run("not-json", "http://bjacshow2.kugou.com/mfx-appconf/cdn/start/config.json");
+assert.equal(passthrough.body, undefined);
 
 console.log("Kugou sanitizer checks passed");

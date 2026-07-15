@@ -61,6 +61,8 @@ function clean(value) {
   return value;
 }
 
+const adOnlyUrl = /\/v\d+\/mobile_splash(?:_sort)?(?:\?|$)|\/(?:adp\/ad|ads\.gateway)\//;
+
 try {
   const url = $request.url;
   const data = clean(JSON.parse($response.body || "{}"));
@@ -81,6 +83,14 @@ try {
   }
 
   $done({ body: JSON.stringify(data) });
-} catch (_) {
-  $done({});
+} catch (error) {
+  const url = typeof $request === "object" && $request ? String($request.url || "") : "";
+  console.log(`[kugou-sanitize-ads] sanitize failed for ${url}: ${error}`);
+  if (adOnlyUrl.test(url)) {
+    // Never pass an unparsed payload through on ad-only endpoints: one leaked
+    // response re-caches splash creatives for the next cold start.
+    $done({ body: JSON.stringify({ status: 1, error_code: 0, errcode: 0, code: 0, data: {} }) });
+  } else {
+    $done({});
+  }
 }

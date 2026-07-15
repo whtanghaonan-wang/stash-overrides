@@ -51,6 +51,9 @@ $cases = @(
     @{ Url = 'https://gateway.kugou.com/v4/mobile_splash'; Expected = $true; Label = 'mobile splash config' }
     @{ Url = 'http://adserviceretry.kglink.cn/v4/mobile_splash_sort'; Expected = $true; Label = 'retry splash config' }
     @{ Url = 'https://dynamic-splash.kugou.com/v4/mobile_splash_sort'; Expected = $true; Label = 'dynamic splash host' }
+    @{ Url = 'https://adservice.kugou.com/v5/mobile_splash?plat=0'; Expected = $true; Label = 'future splash version' }
+    @{ Url = 'https://gateway.kugou.com/adp/ad/v2/getAd?plat=0'; Expected = $true; Label = 'gateway splash ad config' }
+    @{ Url = 'https://gatewayretry.kugou.com/ads.gateway/v1/splash'; Expected = $true; Label = 'gateway retry ad config' }
     @{ Url = 'http://mcloudservice.kugou.com/v1/get_version'; Expected = $false; Label = 'app version check' }
     @{ Url = 'http://tools.mobile.kugou.com/v1/privacy/info'; Expected = $false; Label = 'privacy configuration' }
     @{ Url = 'http://service3.fanxing.kugou.com/video/mo/live/pull/mutiline/cfg'; Expected = $false; Label = 'live playback quality config' }

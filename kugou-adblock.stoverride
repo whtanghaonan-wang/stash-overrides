@@ -5,6 +5,14 @@ rules:
   # Force Kugou/Tencent Music QUIC traffic back to TCP so HTTP/MitM rewrites can see it.
   - AND,((PROTOCOL,QUIC),(OR,((DOMAIN-SUFFIX,kugou.com),(DOMAIN-SUFFIX,kglink.cn),(DOMAIN-SUFFIX,tencentmusic.com),(DOMAIN-SUFFIX,y.qq.com),(DOMAIN-SUFFIX,gtimg.cn),(DOMAIN-SUFFIX,gdt.qq.com),(DOMAIN-SUFFIX,ugdtimg.com)))),REJECT-DROP,no-track
 
+  # Block HTTPDNS endpoints so the app falls back to system DNS (fake-ip),
+  # keeping domain rules and MitM effective against IP-direct connections.
+  - IP-CIDR,119.29.29.29/32,REJECT,no-resolve
+  - IP-CIDR,119.29.29.98/32,REJECT,no-resolve
+  - IP-CIDR,119.28.28.98/32,REJECT,no-resolve
+  - IP-CIDR,182.254.116.0/24,REJECT,no-resolve
+  - IP-CIDR,203.107.1.0/24,REJECT,no-resolve
+
   # Tencent Music / Kugou ad delivery
   - DOMAIN,ad.tencentmusic.com,REJECT
   - DOMAIN,adstats.tencentmusic.com,REJECT
@@ -92,8 +100,6 @@ http:
     # Startup and in-app ad configuration
     - ^http:\/\/log\.stat\.kugou\.com\/mobile\/ad\.html - reject
     - ^https:\/\/fx\.service\.kugou\.com\/mfx-kugoulive\/ad\/ - reject-dict
-    - ^https:\/\/gateway(retry)?\.kugou\.com\/adp\/ad\/ - reject-dict
-    - ^https:\/\/gateway(retry)?\.kugou\.com\/ads\.gateway\/ - reject-dict
 
     # Feed, task, search, player and comment promotions
     - ^https:\/\/gateway(retry)?\.kugou\.com\/v\d\/feeds\/follow_feed_fallback - reject-dict
@@ -115,7 +121,14 @@ http:
     - ^https:\/\/ep\.kugou\.com\/v\d\/album_shop\/get_entrance_info - reject-dict
 
   script:
-    - match: ^https?:\/\/(?:(?:[^\/]+\.)?(?:kugou\.com|kglink\.cn)\/v4\/mobile_splash(?:_sort)?|acshow2?\.kugou\.com\/(?:mfx-shortvideo\/conf\/kv\/app|mfx-kugoulive\/room\/list|show7\/json\/v2\/cdn\/getscfg)|bjacshow2?\.kugou\.com\/mfx-appconf\/cdn\/start\/config\.json|service(?:1|3)\.fanxing\.kugou\.com\/video\/mo\/gateway\/api\/config)(?:\?|$)
+    - match: ^https?:\/\/(?:(?:[^\/]+\.)?(?:kugou\.com|kglink\.cn)\/v\d+\/mobile_splash(?:_sort)?|acshow2?\.kugou\.com\/(?:mfx-shortvideo\/conf\/kv\/app|mfx-kugoulive\/room\/list|show7\/json\/v2\/cdn\/getscfg)|bjacshow2?\.kugou\.com\/mfx-appconf\/cdn\/start\/config\.json|service(?:1|3)\.fanxing\.kugou\.com\/video\/mo\/gateway\/api\/config)(?:\?|$)
+      name: kugou-sanitize-ads
+      type: response
+      require-body: true
+
+    # Sanitize instead of reject-dict: an invalid response makes the client
+    # fall back to cached splash creatives (fail_process/retry_local_ads).
+    - match: ^https?:\/\/gateway(?:retry)?\.kugou\.com\/(?:adp\/ad|ads\.gateway)\/
       name: kugou-sanitize-ads
       type: response
       require-body: true
@@ -127,7 +140,7 @@ http:
 
 script-providers:
   kugou-sanitize-ads:
-    url: https://raw.githubusercontent.com/whtanghaonan-wang/stash-overrides/main/kugou-sanitize-ads.js?v=20260715-v8
+    url: https://raw.githubusercontent.com/whtanghaonan-wang/stash-overrides/main/kugou-sanitize-ads.js?v=20260715-v9
     interval: 86400
 
   kugou-clean-tabs:
